@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Life Winning Assets – Discover premium villas, open plots, apartments, and agricultural land. Curated property opportunities with expert guidance, site visits, and transparent pricing.">
+  <title>Life Winning Assets | Premium Property Opportunities</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    /* [Keep your existing CSS here - It's identical to your provided code] */
+    :root {
+      --navy: #0B1B36;
+      --navy-light: #1A2D4C;
+      --gold: #C9A227;
+      --gold-light: #F9F4E0;
+      --ink: #2E3A4B;
+      --muted: #66788F;
+      --line: #E2E8F0;
+      --paper: #F7F9FC;
+      --white: #FFFFFF;
+      --wa-green: #25D366;
+      --wa-dark: #1DA851;
+      --shadow: 0 10px 30px -10px rgba(11, 27, 54, 0.08);
+      --shadow-hover: 0 20px 40px -10px rgba(11, 27, 54, 0.12);
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--ink);
+      font-synthesis: none;
+      scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--white);
+      line-height: 1.6;
+      padding-top: 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 5%;
+    }
+
+    h1,
+    h2,
+    h3,
+    .brand {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .social-sidebar {
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--white);
+      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.05);
+      border-radius: 12px 0 0 12px;
+      display: flex;
+      flex-direction: column;
+      padding: 15px 10px;
+      gap: 15px;
+      z-index: 40;
+      border: 1px solid var(--line);
+      border-right: none;
+    }
+
+    .social-sidebar a {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--navy);
+      background: var(--paper);
+      transition: all 0.3s ease;
+      font-size: 1.1rem;
+    }
+
+    .social-sidebar a:hover {
+      color: var(--white);
+      transform: scale(1.1) translateX(-3px);
+    }
+
+    .social-sidebar a.fb:hover {
+      background: #1877F2;
+    }
+
+    .social-sidebar a.ig:hover {
+      background: #E1306C;
+    }
+
+    .social-sidebar a.li:hover {
+      background: #0A66C2;
+    }
+
+    .social-sidebar a.wa:hover {
+      background: var(--wa-green);
+    }
+
+    @media (max-width: 1024px) {
+      .social-sidebar {
+        display: none;
+      }
+    }
+
+    .floating-wa {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: var(--wa-green);
+      color: white;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+      z-index: 90;
+      transition: all 0.3s ease;
+    }
+
+    .floating-wa:hover {
+      background: var(--wa-dark);
+      transform: translateY(-5px) scale(1.05);
+      color: white;
+    }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      transition: all 0.3s;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.3px;
+      color: var(--navy);
+      line-height: 1.1;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-light {
+      font-weight: 400;
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .brand small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.5rem;
+      letter-spacing: 1.6px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .nav-links a:not(.btn) {
+      color: var(--ink);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:not(.btn):hover {
+      color: var(--navy);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      transition: 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(11, 27, 54, 0.15);
+    }
+
+    .btn-primary:hover {
+      background: var(--navy-light);
+      box-shadow: 0 6px 16px rgba(11, 27, 54, 0.2);
+    }
+
+    .btn-outline {
+      border-color: var(--line);
+      background: transparent;
+      color: var(--navy);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--navy);
+      background: var(--paper);
+    }
+
+    .btn-wa {
+      background: var(--wa-green);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+    }
+
+    .btn-wa:hover {
+      background: var(--wa-dark);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      padding: 6rem 0;
+      align-items: center;
+      background: linear-gradient(160deg, #F7F9FC 0%, #EEF3FA 100%);
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-copy .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: var(--navy);
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+      margin-bottom: 1.5rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.8rem, 5vw, 4rem);
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 1.5rem;
+      color: var(--navy);
+    }
+
+    .hero h1 span {
+      color: var(--gold);
+      font-style: italic;
+      display: inline-block;
+    }
+
+    .hero-copy>p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .text-link {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--navy);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+    }
+
+    .text-link:hover {
+      color: var(--gold);
+    }
+
+    .hero-proof {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .avatar-stack {
+      display: flex;
+    }
+
+    .avatar-stack img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-left: -12px;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar-stack img:first-child {
+      margin-left: 0;
+    }
+
+    .hero-art {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 550px;
+      border-radius: 24px;
+      padding: 12px;
+      background: #fff;
+      box-shadow: var(--shadow-hover);
+    }
+
+    .hero-image-wrapper img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .floating-badge {
+      position: absolute;
+      background: #fff;
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(11, 27, 54, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      border: 1px solid var(--line);
+    }
+
+    .floating-badge.top-left {
+      top: 8%;
+      left: -10%;
+    }
+
+    .floating-badge.bottom-right {
+      bottom: 8%;
+      right: -10%;
+    }
+
+    .floating-badge .icon {
+      width: 44px;
+      height: 44px;
+      background: var(--gold-light);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-size: 1.4rem;
+      color: var(--gold);
+    }
+
+    .floating-badge b {
+      display: block;
+      font-size: 1rem;
+      color: var(--navy);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .floating-badge small {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .search-section {
+      padding: 4rem 0 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .search-section h2 {
+      font-size: 2.4rem;
+      letter-spacing: -0.5px;
+      color: var(--navy);
+    }
+
+    .search-controls {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-controls input,
+    .search-controls select {
+      padding: 14px 20px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      min-width: 250px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .search-controls input:focus,
+    .search-controls select:focus {
+      border-color: var(--navy);
+      box-shadow: 0 4px 10px rgba(11, 27, 54, 0.08);
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      padding: 2rem 0 4rem;
+    }
+
+    .property-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      overflow: hidden;
+      background: #fff;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .property-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: #CBD5E1;
+    }
+
+    .property-visual {
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .property-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s;
+    }
+
+    .property-card:hover .property-visual img {
+      transform: scale(1.06);
+    }
+
+    .property-tag {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: #fff;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      z-index: 2;
+      font-family: 'Inter', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .property-body {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .property-location {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    .property-body h3 {
+      font-size: 1.4rem;
+      margin: 12px 0;
+      letter-spacing: -0.2px;
+      color: var(--navy);
+    }
+
+    .property-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+
+    .property-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      margin-top: auto;
+    }
+
+    .property-price {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--navy);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .property-price small {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 4px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .enquire-btn {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .enquire-btn:hover {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 5rem;
+      color: var(--muted);
+      background: var(--paper);
+      border-radius: 20px;
+      border: 1px dashed var(--line);
+    }
+
+    .view-all-section {
+      display: flex;
+      justify-content: center;
+      padding-bottom: 6rem;
+    }
+
+    .btn-view-all {
+      background: transparent;
+      color: var(--navy);
+      border: 2px solid var(--line);
+      padding: 16px 36px;
+      font-size: 1rem;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-view-all:hover {
+      border-color: var(--navy);
+      background: var(--paper);
+    }
+
+    .btn-view-all span {
+      transition: transform 0.3s ease;
+    }
+
+    .btn-view-all:hover span {
+      transform: translateX(6px);
+    }
+
+    .process-section {
+      background: linear-gradient(160deg, #F7F9FC 0%, #EEF3FA 100%);
+      padding: 8rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .process-header {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 10%;
+      margin-bottom: 5rem;
+      align-items: end;
+    }
+
+    .process-header h2 {
+      font-size: 2.8rem;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      color: var(--navy);
+      margin-top: 1rem;
+    }
+
+    .process-steps-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+    }
+
+    .process-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .process-card:hover {
+      box-shadow: var(--shadow);
+      border-color: #CBD5E1;
+      transform: translateY(-6px);
+    }
+
+    .step-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--line);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      transition: color 0.3s;
+    }
+
+    .process-card:hover .step-number {
+      color: var(--gold-light);
+    }
+
+    .process-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      background: var(--paper);
+    }
+
+    .process-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--navy);
+    }
+
+    .process-card p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .contact-section {
+      padding: 8rem 0;
+      background: var(--white);
+      border-top: 1px solid var(--line);
+    }
+
+    .contact-head {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .contact-head h2 {
+      font-size: 2.8rem;
+      letter-spacing: -0.5px;
+      color: var(--navy);
+    }
+
+    .contact-head p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 1rem auto 0;
+      font-size: 1.1rem;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 20px;
+    }
+
+    .info-icon {
+      width: 50px;
+      height: 50px;
+      background: var(--paper);
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: var(--navy);
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      border: 1px solid var(--line);
+    }
+
+    .info-item h4 {
+      font-size: 1.1rem;
+      color: var(--navy);
+      margin-bottom: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .info-item p {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .map-container {
+      margin-top: 1.5rem;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+      height: 240px;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .contact-form {
+      background: var(--paper);
+      padding: 4rem;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--line);
+    }
+
+    .contact-form h3 {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--navy);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      transition: 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--navy);
+      box-shadow: 0 0 0 4px rgba(11, 27, 54, 0.05);
+    }
+
+    .form-group textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .form-actions .btn {
+      padding: 16px 32px;
+      width: 100%;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 3rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 2rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      background: var(--paper);
+    }
+
+    .site-footer .brand {
+      transform: scale(0.95);
+      transform-origin: left;
+    }
+
+    .site-footer .logo-container {
+      width: 40px;
+      height: 40px;
+    }
+
+    .site-footer a {
+      font-weight: 600;
+      color: var(--navy);
+      transition: color 0.2s;
+    }
+
+    .site-footer a:hover {
+      color: var(--gold);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 27, 54, 0.7);
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .property-modal {
+      background: #fff;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      border-radius: 24px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+      position: relative;
+    }
+
+    .modal-backdrop.active .property-modal {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.2rem;
+      color: var(--navy);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: var(--paper);
+      transform: scale(1.1);
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      object-fit: cover;
+    }
+
+    .modal-content {
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .modal-content .property-tag {
+      position: static;
+      display: inline-block;
+      width: fit-content;
+      margin-bottom: 1rem;
+      box-shadow: none;
+      border: 1px solid var(--line);
+      background: var(--paper);
+    }
+
+    .modal-content h2 {
+      font-size: 2rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-form .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .modal-form .btn {
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translate(-50%, 20px);
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 28px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s;
+      z-index: 200;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 1100px) {
+      .property-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .hero {
+        gap: 2rem;
+        padding: 5rem 0;
+      }
+
+      .property-modal {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+      }
+
+      .modal-image {
+        min-height: 250px;
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 4rem 0;
+        text-align: center;
+      }
+
+      .hero-copy>p {
+        margin: 0 auto 2.5rem;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hero-proof {
+        justify-content: center;
+      }
+
+      .hero-art {
+        order: -1;
+        margin-bottom: 2rem;
+      }
+
+      .floating-badge {
+        display: none;
+      }
+
+      .process-header {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+
+      .process-steps-container {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .nav-links a:not(.btn) {
+        display: none;
+      }
+
+      .contact-form {
+        padding: 2.5rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .property-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .search-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-controls {
+        flex-direction: column;
+      }
+
+      .search-controls input,
+      .search-controls select {
+        width: 100%;
+        min-width: unset;
+      }
+
+      .site-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .site-header {
+        height: 70px;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      .modal-content {
+        padding: 2rem;
+      }
+
+      .floating-wa {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="social-sidebar">
+    <a href="#" class="fb" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="ig" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="#" class="li" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://wa.me/919553774933" target="_blank" class="wa" aria-label="WhatsApp"><i
+        class="fab fa-whatsapp"></i></a>
+  </div>
+
+  <a href="https://wa.me/919553774933?text=Hello%20Life%20Winning%20Assets,%20I'd%20like%20to%20enquire%20about%20properties."
+    target="_blank" class="floating-wa" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html">
+        <div class="logo-container"><img src="logo.png" alt="Life Winning Assets Logo" class="logo-img"
+            onerror="this.src='https://placehold.co/100x100/0B1B36/C9A227?text=LWA&font=playfair-display'"></div>
+        <span>Life<span class="brand-light">Winning</span> Assets<small>PROPERTY PROMOTION</small></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#properties">Properties</a>
+        <a href="#process">How it works</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-outline btn-sm" href="login.html">Staff login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero container">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="dot"></span> CURATED PROPERTY OPPORTUNITIES</span>
+        <h1>Find a place for<br><span>what comes next.</span></h1>
+        <p>Explore carefully selected villas, plots, apartments and land opportunities, supported by a team that guides
+          you from first enquiry to site visit.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#properties">Explore properties ↗</a>
+          <a class="text-link" href="#process">How it works →</a>
+        </div>
+        <div class="hero-proof">
+          <div class="avatar-stack">
+            <img src="https://placehold.co/80x80/E2E8F0/0B1B36?text=R" alt="Client R">
+            <img src="https://placehold.co/80x80/F9F4E0/C9A227?text=S" alt="Client S">
+            <img src="https://placehold.co/80x80/0B1B36/ffffff?text=M" alt="Client M">
+          </div>
+          <span>Personal guidance at every step</span>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-image-wrapper">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQntM4N0q3oBWafhfonEjaKb68rqetVd05S-SG-nVBGAQvghgzusI6u8yO1&s=10"
+            alt="Modern luxury villa with pool">
+          <div class="floating-badge top-left"><span class="icon">🏡</span>
+            <div><b>150+ Properties</b><small>Verified listings</small></div>
+          </div>
+          <div class="floating-badge bottom-right"><span class="icon">⭐</span>
+            <div><b>Top Rated</b><small>Real estate agency</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container" id="properties">
+      <div class="search-section">
+        <div>
+          <span class="eyebrow"
+            style="font-size:0.75rem; letter-spacing:1.5px; color:var(--navy); font-weight:700;">DISCOVER YOUR
+            OPTIONS</span>
+          <h2>Property opportunities</h2>
+        </div>
+        <div class="search-controls">
+          <input id="searchInput" placeholder="Search by name or location…" aria-label="Search properties">
+          <select id="categoryFilter" aria-label="Filter category">
+            <option value="">All property types</option>
+            <option>Villa</option>
+            <option>Open Plot</option>
+            <option>Ready-to-Move Flat</option>
+            <option>Agricultural Land</option>
+            <option>Gated Community Flat</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="property-grid" id="propertyGrid">
+        <div class="empty-state">
+          <h3>Loading properties...</h3>
+        </div>
+      </div>
+
+      <div class="view-all-section">
+        <a href="properties.html" class="btn-view-all">View all properties <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="process-section" id="process">
+      <div class="container">
+        <div class="process-header">
+          <div>
+            <span class="eyebrow" style="font-size:0.75rem; letter-spacing:1.5px; color:var(--navy); font-weight:700;">A
+              CLEARER WAY FORWARD</span>
+            <h2>From first look<br>to site visit.</h2>
+          </div>
+          <div>
+            <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.8; max-width: 500px;">We've simplified the
+              property journey into three clear steps. From exploring our curated listings to stepping foot on your
+              future property, our team is with you at every stage.</p>
+          </div>
+        </div>
+        <div class="process-steps-container">
+          <div class="process-card">
+            <div class="step-number">01</div>
+            <div class="process-icon-wrapper">🔍</div>
+            <h3>Explore</h3>
+            <p>Review our curated selection of premium properties. Filter by location, budget, and property type to find
+              the perfect fit for your lifestyle and investment goals.</p>
+          </div>
+          <div class="process-card">
+            <div class="step-number">02</div>
+            <div class="process-icon-wrapper">🤝</div>
+            <h3>Connect</h3>
+            <p>Found something you like? Share your interest with our expert team. We'll provide detailed information,
+              answer your questions, and coordinate the next steps seamlessly.</p>
+          </div>
+          <div class="process-card">
+            <div class="step-number">03</div>
+            <div class="process-icon-wrapper">🏡</div>
+            <h3>Visit & Decide</h3>
+            <p>Schedule a personalized site visit. Walk the grounds, review the details up close, and take your time to
+              make the right decision with zero pressure.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <div class="contact-head">
+          <span class="eyebrow" style="font-size:0.75rem; letter-spacing:1.5px; color:var(--navy); font-weight:700;">GET
+            IN TOUCH</span>
+          <h2>Let’s discuss your next move</h2>
+          <p>Fill in the form and our property expert will reach out within one business day.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-info">
+            <div class="info-item">
+              <div class="info-icon">📍</div>
+              <div>
+                <h4>Visit our office</h4>
+                <p>3rd Floor, Horizon Towers,<br>Financial District, Hyderabad – 500032</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">📞</div>
+              <div>
+                <h4>Call us</h4>
+                <p>+91 40 4567 8900<br>Mon–Sat, 9:00 AM – 7:00 PM</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">✉️</div>
+              <div>
+                <h4>Email</h4>
+                <p>hello@lifewinningassets.in<br>sales@lifewinningassets.in</p>
+              </div>
+            </div>
+            <div class="map-container"><iframe
+                src="https://www.openstreetmap.org/export/embed.html?bbox=78.360%2C17.420%2C78.400%2C17.450&amp;layer=mapnik&amp;marker=17.435%2C78.380"
+                style="border:0;" allowfullscreen="" loading="lazy"></iframe></div>
+          </div>
+          <div class="contact-form">
+            <h3>Send a message</h3>
+            <form id="contactForm" novalidate>
+              <div class="form-row">
+                <div class="form-group"><label for="name">Full name *</label><input type="text" id="name" name="name"
+                    placeholder="e.g. Ananya Rao" required></div>
+                <div class="form-group"><label for="email">Email *</label><input type="email" id="email" name="email"
+                    placeholder="you@example.com" required></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label for="phone">Phone</label><input type="tel" id="phone" name="phone"
+                    placeholder="+91 98765 43210"></div>
+                <div class="form-group"><label for="interest">Property interest</label><select id="interest"
+                    name="interest">
+                    <option value="">Select property type</option>
+                    <option>Villa</option>
+                    <option>Open Plot</option>
+                    <option>Ready-to-Move Flat</option>
+                    <option>Agricultural Land</option>
+                    <option>Gated Community Flat</option>
+                  </select></div>
+              </div>
+              <div class="form-group"><label for="message">Message / specific requirement</label><textarea id="message"
+                  name="message" placeholder="Tell us what you’re looking for…"></textarea></div>
+              <div class="form-actions" style="flex-direction: column; gap: 12px;">
+                <button type="submit" class="btn btn-primary">Send enquiry →</button>
+                <button type="button" class="btn btn-wa" onclick="submitToWhatsApp('contactForm')"><i
+                    class="fab fa-whatsapp"></i> Send via WhatsApp</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"
+      style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 2rem; width: 100%;">
+      <a class="brand" href="index.html">
+        <div class="logo-container"><img src="logo.png" alt="Life Winning Assets Logo" class="logo-img"
+            onerror="this.src='https://placehold.co/100x100/0B1B36/C9A227?text=LWA&font=playfair-display'"></div>
+        <span>Life<span class="brand-light">Winning</span> Assets<small>PROPERTY PROMOTION</small></span>
+      </a>
+      <span>© 2026 Life Winning Assets. All rights reserved.</span>
+      <a href="login.html">Staff portal →</a>
+    </div>
+  </footer>
+
+  <div class="modal-backdrop" id="enquiryModal">
+    <div class="property-modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <img id="modalImg" src="" alt="Property Image" class="modal-image">
+      <div class="modal-content">
+        <span class="property-tag" id="modalCategory"></span>
+        <h2 id="modalTitle"></h2>
+        <div class="property-location" id="modalLocation" style="margin-bottom: 1rem; font-size: 0.9rem;"></div>
+        <div class="modal-price" id="modalPrice"></div>
+        <form id="modalLeadForm" class="modal-form" onsubmit="submitLead(event)">
+          <input type="hidden" id="modalPropertyName" value="">
+          <div class="form-group"><label>Your Name *</label><input type="text" id="modalName" required
+              placeholder="Enter your name"></div>
+          <div class="form-group"><label>Phone or Email *</label><input type="text" id="modalContact" required
+              placeholder="Your phone number or email"></div>
+          <button type="submit" class="btn btn-primary">Submit Enquiry</button>
+          <button type="button" class="btn btn-wa" onclick="submitToWhatsApp('modalLeadForm', true)"><i
+              class="fab fa-whatsapp"></i> Enquire via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    // ==========================================
+    // SUPABASE CONFIGURATION
+    // ==========================================
+    const SUPABASE_URL = 'https://fwcbafhlkzfjkyhngrhf.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_rnX6v1I7rmFfLtqq-B3CDw_5olAI8z9';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let allProperties = [];
+    var grid = document.getElementById('propertyGrid');
+    var search = document.getElementById('searchInput');
+    var filter = document.getElementById('categoryFilter');
+    var activeProperty = null;
+
+    function defaultImageFor(category) {
+      var map = { 'Villa': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', 'Open Plot': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80', 'Ready-to-Move Flat': 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&q=80', 'Agricultural Land': 'https://images.unsplash.com/photo-1500076656116-558758c991c1?w=600&q=80', 'Gated Community Flat': 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&q=80' };
+      return map[category] || 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80';
+    }
+
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+    function toast(msg, isError = false) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.background = isError ? '#c0392b' : 'var(--navy)'; // Red for errors, Navy for success
+      t.classList.add('show');
+      setTimeout(function () { t.classList.remove('show'); }, 5000);
+    }
+
+    // FETCH FROM SUPABASE
+    async function fetchProperties() {
+      const { data, error } = await db.from('properties').select('*').order('created_at', { ascending: false });
+      if (!error && data) {
+        allProperties = data;
+        render();
+      } else {
+        console.error('Error fetching properties:', error);
+        grid.innerHTML = '<div class="empty-state"><h3>Could not load properties</h3><p>Please refresh the page.</p></div>';
+      }
+    }
+
+    function render() {
+      if (!grid) return;
+      var q = (search.value || '').toLowerCase();
+      var list = allProperties.filter(function (p) {
+        var haystack = (p.name + ' ' + p.location + ' ' + p.category).toLowerCase();
+        return (!filter.value || p.category === filter.value) && (!q || haystack.indexOf(q) !== -1);
+      });
+
+      if (!list.length) {
+        grid.innerHTML = '<div class="empty-state"><h3>No properties found</h3><p>Try adjusting your search or filter criteria.</p></div>';
+        return;
+      }
+
+      var display = list.slice(0, 6);
+
+      grid.innerHTML = display.map(function (p) {
+        return '<article class="property-card">' +
+          '<div class="property-visual">' +
+          '<img src="' + esc(p.image || defaultImageFor(p.category)) + '" alt="' + esc(p.name) + '" loading="lazy" onerror="this.src=\'' + defaultImageFor(p.category) + '\'">' +
+          '<span class="property-tag">' + esc(p.category) + '</span>' +
+          '</div>' +
+          '<div class="property-body">' +
+          '<div class="property-location"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> ' + esc(p.location) + ' · ' + esc(p.area || 'Details on request') + '</div>' +
+          '<h3>' + esc(p.name) + '</h3>' +
+          '<p class="property-desc">' + esc(p.description) + '</p>' +
+          '<div class="property-bottom">' +
+          '<div class="property-price">' + esc(p.price) + '<small>Indicative asking price</small></div>' +
+          '<button class="enquire-btn" onclick="openModal(\'' + p.id + '\')">I\'m interested ↗</button>' +
+          '</div>' +
+          '</div>' +
+          '</article>';
+      }).join('');
+    }
+
+    function openModal(id) {
+      activeProperty = allProperties.find(function (p) { return String(p.id) === String(id); });
+      if (!activeProperty) return;
+
+      document.getElementById('modalImg').src = activeProperty.image || defaultImageFor(activeProperty.category);
+      document.getElementById('modalCategory').textContent = activeProperty.category;
+      document.getElementById('modalTitle').textContent = activeProperty.name;
+      document.getElementById('modalLocation').innerHTML = '<i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> ' + esc(activeProperty.location);
+      document.getElementById('modalPrice').textContent = activeProperty.price;
+      document.getElementById('modalPropertyName').value = activeProperty.name;
+      document.getElementById('modalLeadForm').reset();
+
+      document.getElementById('enquiryModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('enquiryModal').classList.remove('active');
+      document.body.style.overflow = '';
+      activeProperty = null;
+    }
+
+    document.getElementById('enquiryModal').addEventListener('click', function (e) { if (e.target === this) closeModal(); });
+
+    async function submitLead(e) {
+      e.preventDefault();
+      var name = document.getElementById('modalName').value.trim();
+      var contact = document.getElementById('modalContact').value.trim();
+      var propertyName = document.getElementById('modalPropertyName').value;
+
+      if (!name || !contact) { toast('Please fill in all required fields.', true); return; }
+
+      var isEmail = contact.indexOf('@') !== -1;
+      var btn = e.target.querySelector('button[type="submit"]');
+      var original = btn.textContent;
+      btn.textContent = 'Submitting...'; btn.disabled = true;
+
+      // Insert directly into Supabase leads table
+      const { error } = await db.from('leads').insert([{
+        name: name,
+        property: propertyName,
+        phone: isEmail ? '' : contact,
+        email: isEmail ? contact : '',
+        status: 'New',
+        source: 'Public Website (Property Modal)'
+      }]);
+
+      btn.textContent = original; btn.disabled = false;
+
+      if (error) {
+        console.error(error);
+        // SHOW EXACT DB ERROR
+        toast('Database Error: ' + error.message, true);
+      } else {
+        toast('Thanks, ' + name + '. Your enquiry has been sent to our team.');
+        closeModal();
+      }
+    }
+
+    async function submitToWhatsApp(formId, isModal) {
+      var phone = '919553774933';
+      var name, contact, interest, message, propName;
+
+      if (isModal) {
+        name = document.getElementById('modalName').value.trim();
+        contact = document.getElementById('modalContact').value.trim();
+        propName = document.getElementById('modalPropertyName').value;
+        if (!name || !contact) { toast('Please enter your name and contact number first.', true); return; }
+
+        message = 'Hello Life Winning Assets, I am interested in *' + propName + '*. My name is ' + name + '. You can reach me at ' + contact + '. Please share more details.';
+        var isEmail1 = contact.indexOf('@') !== -1;
+
+        const { error } = await db.from('leads').insert([{ name: name, property: propName, phone: isEmail1 ? '' : contact, email: isEmail1 ? contact : '', status: 'New', source: 'WhatsApp Modal' }]);
+        if (error) { toast('Database Error: ' + error.message, true); return; }
+
+        closeModal();
+      } else {
+        name = document.getElementById('name').value.trim();
+        contact = document.getElementById('email').value.trim() || document.getElementById('phone').value.trim();
+        interest = document.getElementById('interest').value;
+        message = document.getElementById('message').value.trim();
+        if (!name || !contact) { toast('Please fill in your name and contact details first.', true); return; }
+
+        var text = 'Hello Life Winning Assets, I would like to enquire about properties.\n\n*Name:* ' + name + '\n*Contact:* ' + contact + '\n*Interest:* ' + (interest || 'General');
+        if (message) text += '\n*Message:* ' + message;
+
+        const { error } = await db.from('leads').insert([{ name: name, property: interest || 'General Enquiry', phone: document.getElementById('phone').value.trim(), email: document.getElementById('email').value.trim(), status: 'New', source: 'WhatsApp Contact Form' }]);
+        if (error) { toast('Database Error: ' + error.message, true); return; }
+
+        window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(text), '_blank');
+        document.getElementById('contactForm').reset();
+        toast('Opening WhatsApp...');
+        return;
+      }
+      window.open('https://wa.me/' + phone + '?text=' + encodeURIComponent(message), '_blank');
+    }
+
+    document.getElementById('contactForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var name = document.getElementById('name').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var phone = document.getElementById('phone').value.trim();
+      var interest = document.getElementById('interest').value;
+
+      if (!name || !email) { toast('Please fill in your name and email.', true); return; }
+
+      const btn = this.querySelector('button[type="submit"]');
+      const original = btn.textContent;
+      btn.textContent = 'Sending...'; btn.disabled = true;
+
+      const { error } = await db.from('leads').insert([{
+        name: name, email: email, phone: phone, property: interest || 'General', status: 'New', source: 'Public Website (Contact Form)'
+      }]);
+
+      btn.textContent = original; btn.disabled = false;
+
+      if (error) {
+        console.error(error);
+        // SHOW EXACT DB ERROR
+        toast('Database Error: ' + error.message, true);
+      } else {
+        toast('Thanks ' + name + '! Our team will contact you shortly.');
+        this.reset();
+      }
+    });
+
+    if (search) search.addEventListener('input', render);
+    if (filter) filter.addEventListener('change', render);
+
+    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+      anchor.addEventListener('click', function (e) {
+        var href = this.getAttribute('href');
+        if (href === '#') return;
+        var target = document.querySelector(href);
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+
+    fetchProperties();
+  </script>
+</body>
+
+</html>

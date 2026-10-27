@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Staff Login | Life Winning Assets</title>
+  <style>
+    :root {
+      /* Life Winning Assets – Brand Palette */
+      --navy: #0B1B36;
+      --navy-light: #1A2D4C;
+      --gold: #C9A227;
+      --gold-light: #F9F4E0;
+      --ink: #2E3A4B;
+      --muted: #66788F;
+      --line: #E2E8F0;
+      --paper: #F7F9FC;
+      --blue: #2675e8; /* used for focus states */
+      --shadow: 0 18px 50px rgba(11, 27, 54, 0.09);
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      font-family: 'Inter', sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    button,
+    input {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    /* ---------- Brand ---------- */
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.3rem;
+      letter-spacing: -0.3px;
+      color: var(--navy);
+      line-height: 1.1;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .logo-container {
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brand-light {
+      font-weight: 400;
+      color: var(--gold);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .brand small {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.5rem;
+      letter-spacing: 1.6px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 3px;
+    }
+
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 22px;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: 0.18s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--navy);
+      color: #fff;
+      box-shadow: 0 7px 16px rgba(11, 27, 54, 0.2);
+    }
+
+    .btn-primary:hover {
+      background: var(--navy-light);
+      box-shadow: 0 10px 22px rgba(11, 27, 54, 0.25);
+    }
+
+    .btn-full {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      font-size: 1rem;
+    }
+
+    .btn-outline {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--navy);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--navy);
+      background: var(--paper);
+    }
+
+    /* ---------- Typography ---------- */
+    .eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      color: var(--muted);
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .eyebrow-light {
+      color: #a6c5e8;
+    }
+
+    /* ---------- Login Page ---------- */
+    .login-page {
+      min-height: 100vh;
+      background: #fff;
+    }
+
+    .login-back {
+      position: absolute;
+      top: 26px;
+      left: 5%;
+      font-size: 0.9rem;
+      color: #dbe5f2;
+      z-index: 3;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .login-back:hover {
+      color: #fff;
+    }
+
+    .login-layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* Left Panel (Brand) */
+    .login-brand-panel {
+      background: linear-gradient(145deg, #0B1B36, #1A2D4C);
+      color: white;
+      padding: 43px 9%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-brand-panel:after {
+      content: "";
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      right: -170px;
+      bottom: -190px;
+      box-shadow: 0 0 0 55px rgba(255, 255, 255, 0.03),
+        0 0 0 110px rgba(255, 255, 255, 0.02);
+    }
+
+    .brand-white {
+      color: white;
+      margin-top: 22px;
+    }
+
+    .brand-white .brand-light {
+      color: #80b4ff;
+    }
+
+    .login-panel-copy {
+      margin: auto 0;
+      max-width: 450px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .login-panel-copy h1 {
+      font-size: clamp(2.5rem, 4vw, 3.8rem);
+      letter-spacing: -1.5px;
+      line-height: 1.13;
+      margin: 22px 0;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .login-panel-copy h1 em {
+      color: #C9A227;
+      font-style: normal;
+    }
+
+    .login-panel-copy p {
+      font-size: 1rem;
+      line-height: 1.9;
+      color: #c0cfe0;
+      max-width: 390px;
+    }
+
+    .panel-foot {
+      font-size: 0.8rem;
+      color: #a9bfd7;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-foot span {
+      color: #C9A227;
+      font-size: 1.1rem;
+    }
+
+    /* Right Panel (Form) */
+    .login-form-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 70px 10% 30px;
+      position: relative;
+      background: #fff;
+    }
+
+    .login-form-wrap {
+      width: 100%;
+      max-width: 390px;
+    }
+
+    .login-form-wrap h2 {
+      font-size: 1.8rem;
+      letter-spacing: -0.5px;
+      margin: 13px 0 9px;
+      color: var(--navy);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .muted {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .login-form-wrap form>label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 18px 0 8px;
+      letter-spacing: 0.2px;
+    }
+
+    .login-form-wrap input:not([type=checkbox]) {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      color: var(--ink);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .login-form-wrap input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
+    }
+
+    .password-wrap {
+      position: relative;
+    }
+
+    .password-wrap input {
+      padding-right: 60px !important;
+    }
+
+    .show-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: none;
+      color: var(--navy);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .show-password:hover {
+      color: var(--gold);
+    }
+
+    .form-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .check-label {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .check-label input {
+      accent-color: var(--navy);
+      width: 14px;
+      height: 14px;
+    }
+
+    .demo-credentials {
+      margin-top: 26px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--paper);
+      padding: 16px;
+    }
+
+    .demo-credentials>b {
+      display: block;
+      font-size: 0.8rem;
+      margin-bottom: 10px;
+      color: var(--navy);
+    }
+
+    .demo-credentials>div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 0.8rem;
+    }
+
+    .demo-credentials>div span {
+      color: var(--muted);
+      width: 70px;
+      font-weight: 500;
+    }
+
+    .demo-credentials code {
+      font-size: 0.8rem;
+      color: var(--navy);
+      flex: 1;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: 1px solid var(--line);
+      font-family: 'Inter', monospace;
+    }
+
+    .demo-credentials button {
+      border: 0;
+      background: none;
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
+    }
+
+    .demo-credentials button:hover {
+      color: var(--navy);
+    }
+
+    .demo-credentials small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.7rem;
+      line-height: 1.5;
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+
+    .error-message {
+      color: #bd3f3f;
+      font-size: 0.8rem;
+      min-height: 18px;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .login-legal {
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.7rem;
+      color: #a0aab7;
+    }
+
+    .mobile-brand {
+      display: none;
+    }
+
+    /* ---------- Responsive ---------- */
+    @media(max-width: 860px) {
+      .login-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .login-brand-panel {
+        display: none;
+      }
+
+      .login-back {
+        color: var(--muted);
+        top: 22px;
+        left: 6%;
+      }
+
+      .login-back:hover {
+        color: var(--navy);
+      }
+
+      .login-form-panel {
+        min-height: 100vh;
+        padding: 75px 7% 50px;
+      }
+
+      .mobile-brand {
+        display: flex;
+        margin-bottom: 40px;
+      }
+
+      .login-legal {
+        bottom: 15px;
+      }
+
+      .login-form-wrap h2 {
+        font-size: 1.6rem;
+      }
+    }
+
+    @media(max-width: 480px) {
+      .login-form-panel {
+        padding: 70px 6% 40px;
+      }
+
+      .login-form-wrap h2 {
+        font-size: 1.4rem;
+      }
+
+      .demo-credentials>div {
+        flex-wrap: wrap;
+      }
+
+      .demo-credentials code {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body class="login-page">
+  <a class="login-back" href="index.html">← Back to website</a>
+  <main class="login-layout">
+    <!-- BRAND PANEL -->
+    <section class="login-brand-panel">
+      <a class="brand brand-white" href="index.html">
+        <div class="logo-container">
+          <img src="logo.png" alt="Life Winning Assets Logo" class="logo-img"
+            onerror="this.src='https://placehold.co/100x100/0B1B36/C9A227?text=LWA&font=playfair-display'">
+        </div>
+        <span>Life<span class="brand-light">Winning</span> Assets<small>PROPERTY SALES PLATFORM</small></span>
+      </a>
+      <div class="login-panel-copy">
+        <span class="eyebrow eyebrow-light">INTERNAL TEAM WORKSPACE</span>
+        <h1>Good deals begin<br>with good <em>follow-through.</em></h1>
+        <p>Manage property tie-ups, enquiries, site visits and sales progress in one workspace.</p>
+      </div>
+      <div class="panel-foot"><span>◈</span> A clearer view of every opportunity</div>
+    </section>
+
+    <!-- FORM PANEL -->
+    <section class="login-form-panel">
+      <div class="login-form-wrap">
+        <!-- Mobile brand -->
+        <div class="mobile-brand brand">
+          <div class="logo-container">
+            <img src="logo.png" alt="Life Winning Assets Logo" class="logo-img"
+              onerror="this.src='https://placehold.co/100x100/0B1B36/C9A227?text=LWA&font=playfair-display'">
+          </div>
+          <span>Life<span class="brand-light">Winning</span> Assets<small>PROPERTY PROMOTION</small></span>
+        </div>
+
+        <span class="eyebrow">WELCOME BACK</span>
+        <h2>Sign in to your workspace</h2>
+        <p class="muted">Enter the demo credentials to explore the staff dashboard.</p>
+
+        <form id="loginForm" novalidate>
+          <label for="username">Username</label>
+          <input id="username" autocomplete="username" value="admin" required>
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input id="password" type="password" autocomplete="current-password" value="EstateDemo2026!" required>
+            <button type="button" id="togglePassword" class="show-password">Show</button>
+          </div>
+          <div class="form-meta">
+            <label class="check-label"><input type="checkbox" id="remember"> Remember me</label>
+            <span>Demo access</span>
+          </div>
+          <button class="btn btn-primary btn-full" type="submit">Sign in <span>→</span></button>
+          <p id="loginError" class="error-message" aria-live="polite"></p>
+        </form>
+
+        <!-- Demo credentials -->
+        <div class="demo-credentials">
+          <b>Demo credentials</b>
+          <div><span>Username</span><code>admin</code><button data-copy="admin">Copy</button></div>
+          <div><span>Password</span><code>EstateDemo2026!</code><button data-copy="EstateDemo2026!">Copy</button></div>
+          <small>Front-end demo only. These credentials are not secure authentication.</small>
+        </div>
+      </div>
+      <div class="login-legal">© 2026 Life Winning Assets · Local prototype</div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var form = document.getElementById('loginForm');
+      var error = document.getElementById('loginError');
+
+      // Toggle password visibility
+      document.getElementById('togglePassword').addEventListener('click', function () {
+        var p = document.getElementById('password');
+        p.type = p.type === 'password' ? 'text' : 'password';
+        this.textContent = p.type === 'password' ? 'Show' : 'Hide';
+      });
+
+      // Copy credentials
+      document.querySelectorAll('[data-copy]').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          var text = btn.dataset.copy;
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 1200);
+          } catch (e) {
+            var input = document.createElement('textarea');
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand('copy');
+            input.remove();
+            btn.textContent = 'Copied';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 1200);
+          }
+        });
+      });
+
+      // Redirect if already authenticated
+      if (sessionStorage.getItem('lwa-demo-auth') === 'yes') {
+        location.href = 'admin.html';
+        return;
+      }
+
+      // Handle login
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var u = document.getElementById('username').value.trim();
+        var p = document.getElementById('password').value;
+
+        if (u === 'admin' && p === 'EstateDemo2026!') {
+          sessionStorage.setItem('lwa-demo-auth', 'yes');
+          location.href = 'admin.html';
+        } else {
+          error.textContent = 'Incorrect demo credentials. Use the demo details shown below.';
+        }
+      });
+    })();
+  </script>
+</body>
+
+</html>
